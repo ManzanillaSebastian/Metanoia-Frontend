@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Auth } from "../utils/api_utils";
+import { useRouter } from "next/navigation";
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -12,34 +13,38 @@ export default function LoginForm() {
   const [errorMessage, setErrorMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const router = useRouter();
+
   const isEmailValid = EMAIL_REGEX.test(email);
   const isPasswordValid = password.length > 0;
   const isFormValid = isEmailValid && isPasswordValid;
 
-  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: React.SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!isFormValid || isSubmitting) return;
 
     setErrorMessage("");
     setIsSubmitting(true);
-
+    
     try {
       const data = await Auth.login(email, password);
       const role = data.user?.role;
+      
       console.log("Login exitoso. Rol del usuario:", role);
 
-      // switch (role) {
-      //   case "admin":
-      //     router.push("/admin/dashboard");
-      //     break;
-      //   case "client":
-      //     router.push("/client/dashboard");
-      //     break;
-      //   case "trainer":
-      //     router.push("/trainer/dashboard");
-      //     break;
-      // }
+      switch (role) {
+        case "ADMIN":
+          router.push("/admin/dashboard");
+          break;
+        case "CLIENT":
+          //router.push("/client/dashboard");
+          break;
+        case "TRAINER":
+          //router.push("/trainer/dashboard");
+          break;
+      }
     } catch (error) {
+      console.log("Error al iniciar sesión:", error);
       setErrorMessage("Correo o contraseña incorrectos");
     } finally {
       setIsSubmitting(false);
