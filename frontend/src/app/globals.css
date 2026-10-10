@@ -230,3 +230,20 @@
   flex: 1;
   padding: var(--spacing-md);
 }
+
+.sidebar-logout-button {
+  margin-top: 0.5rem;
+  width: 100%;
+  padding: 0.5rem;
+  background: transparent;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: var(--radius-base);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.sidebar-logout-button:hover {
+  background: rgba(255, 255, 255, 0.15);
+}

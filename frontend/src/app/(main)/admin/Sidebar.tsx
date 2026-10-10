@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "../../context/AuthContext";
+import { Auth } from "../../utils/api_utils";
 
 const NAV_ITEMS = [
   { label: "Dashboard", href: "/admin/dashboard" },
@@ -19,7 +20,14 @@ function getInitials(fullName: string) {
 
 export default function Sidebar() {
   const pathname = usePathname();
-  const { user } = useAuth();
+  const router = useRouter();
+  const { user, setUser } = useAuth();
+
+  function handleLogout() {
+    Auth.logout();
+    setUser(null);
+    router.replace("/login");
+  }
 
   return (
     <aside className="sidebar">
@@ -53,6 +61,9 @@ export default function Sidebar() {
         </Link>
         <div className="sidebar-avatar">{user ? getInitials(user.full_name) : "…"}</div>
         <span className="sidebar-username">{user?.full_name ?? "Cargando..."}</span>
+        <button type="button" className="sidebar-logout-button" onClick={handleLogout}>
+          Cerrar sesión
+        </button>
       </div>
     </aside>
   );
